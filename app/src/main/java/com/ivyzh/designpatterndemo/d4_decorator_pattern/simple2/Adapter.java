@@ -42,6 +42,8 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
             @Override
             public void onClick(View v) {
                 Log.d("TAG", "onClick :" + position);
+                mDatas.remove(position);
+                notifyDataSetChanged();
             }
         });
 

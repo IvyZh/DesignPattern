@@ -6,7 +6,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 
@@ -18,18 +17,18 @@ import java.util.ArrayList;
  * Created by Ivy on 2018/11/12.
  */
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity2 extends AppCompatActivity {
 
-    private RecyclerView recyclerView;
+    private WrapperRecyclerView recyclerView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_recyclerview);
+        setContentView(R.layout.activity_recyclerview2);
 
         ArrayList<String> datas = new ArrayList<>();
-        for (int i = 0; i < 50; i++) {
-            datas.add(" data " + i);
+        for (int i = 0; i < 15; i++) {
+            datas.add(" WrapperRecyclerView data " + i);
         }
 
 
@@ -41,18 +40,15 @@ public class MainActivity extends AppCompatActivity {
         layoutManager.setOrientation(OrientationHelper.VERTICAL);
         //设置Adapter
         Adapter recycleAdapter = new Adapter(datas);
-
-
-        WrapperRecyclerAdapter adapter = new WrapperRecyclerAdapter(recycleAdapter);
-
-        recyclerView.setAdapter(adapter);
+        //WrapperRecyclerAdapter adapter = new WrapperRecyclerAdapter(recycleAdapter);
+        recyclerView.setAdapter(recycleAdapter);
 
         //View headerView = LayoutInflater.from(this).inflate(R.layout.header_view, null);//todo 这样写效果不对
         View headerView = LayoutInflater.from(this).inflate(R.layout.header_view, recyclerView, false);
         View footerView = LayoutInflater.from(this).inflate(R.layout.footer_view, recyclerView, false);
 
-        adapter.addHeaderView(headerView);
-        adapter.addFooterView(footerView);
+        recyclerView.addHeaderView(headerView);
+        recyclerView.addFooterView(footerView);
         //设置分隔线
         //recyclerView.addItemDecoration(new DividerGridItemDecoration(this));
         //设置增加或删除条目的动画

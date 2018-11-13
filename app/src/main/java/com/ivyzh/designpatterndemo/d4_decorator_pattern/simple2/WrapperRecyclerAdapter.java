@@ -22,30 +22,34 @@ public class WrapperRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         this.mRecyclerAdapter = adapter;
         mHeaderViews = new ArrayList<>();
         mFooterViews = new ArrayList<>();
+        mRecyclerAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onChanged() {
+                notifyDataSetChanged();
+            }
+        });
     }
 
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int postion) {
-        Log.e("TAG", "onCreateViewHolder" + postion);
+        Log.e("TAG", "onCreateViewHolder " + postion);
         if (postion < mHeaderViews.size()) {
             Log.e("TAG", "add header view");
-
             View headerView = mHeaderViews.get(postion);
             return createHeaderView(headerView);
         }
 
         int itemCount = mRecyclerAdapter.getItemCount();
-
         int adjPos = postion - mHeaderViews.size();
         if (adjPos < itemCount) {
             Log.e("TAG", "add item view");
             return mRecyclerAdapter.onCreateViewHolder(parent, mRecyclerAdapter.getItemViewType(adjPos));
         }
-
+        Log.e("TAG", "add footer view");
         // footerview
-
-        return null;
+        View footerView = mFooterViews.get(postion - itemCount - mHeaderViews.size());
+        return createHeaderView(footerView);
     }
 
     private RecyclerView.ViewHolder createHeaderView(View view) {
@@ -55,6 +59,23 @@ public class WrapperRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+
+        Log.d("TAG", "Wrapper RecyclerAdapter onBindViewHolder:" + position);
+
+        if (position < mHeaderViews.size()) {
+            return;
+        }
+
+        int adjPos = position - mHeaderViews.size();
+        if (adjPos < mRecyclerAdapter.getItemCount()) {
+            mRecyclerAdapter.onBindViewHolder(holder, adjPos);
+            //mRecyclerAdapter.onBindViewHolder(holder, adjPos);
+        } else {
+            Log.d("TAG", "adjPos getItemCount." + adjPos + "  " + mRecyclerAdapter.getItemCount());
+            //fix footer view.
+
+        }
+
 
     }
 
@@ -72,6 +93,28 @@ public class WrapperRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     public void addHeaderView(View v) {
         if (!mHeaderViews.contains(v)) {
             mHeaderViews.add(v);
+            notifyDataSetChanged();
+        }
+    }
+
+    public void removeHeaderView(View v) {
+        if (mHeaderViews.contains(v)) {
+            mHeaderViews.remove(v);
+            notifyDataSetChanged();
+        }
+    }
+
+    // 添加尾部
+    public void addFooterView(View v) {
+        if (!mFooterViews.contains(v)) {
+            mFooterViews.add(v);
+            notifyDataSetChanged();
+        }
+    }
+
+    public void removeFooterView(View v) {
+        if (mFooterViews.contains(v)) {
+            mFooterViews.remove(v);
             notifyDataSetChanged();
         }
     }
